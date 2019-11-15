@@ -74,12 +74,12 @@ class PkgConfig(object):
         # List of source files that can be used to build standalone library.
         self.lib_source = []
         self.lib_source += glob.glob("%s/vta/src/*.cc" % proj_root)
-        if self.TARGET in ["pynq", "ultra96", "zcu104"]:
+        if self.TARGET in ["pynq", "ultra96", "zcu104", "kcu105", "zc702"]:
             # add pynq drivers for any board that uses pynq driver stack (see pynq.io)
             self.lib_source += glob.glob("%s/vta/src/pynq/*.cc" % (proj_root))
 
         # Linker flags
-        if self.TARGET in ["pynq", "ultra96", "zcu104"]:
+        if self.TARGET in ["pynq", "ultra96", "zcu104", "kcu105", "zc702"]:
             self.ldflags = [
                 "-L/usr/lib",
                 "-l:libcma.so"]
@@ -152,6 +152,32 @@ class PkgConfig(object):
             self.load_base_addr = "0xA0001000"
             self.compute_base_addr = "0xA0002000"
             self.store_base_addr = "0xA0003000"
+        elif self.TARGET == "kcu105":
+            self.fpga_device = "xcku040-ffva1156-2-e"
+            self.fpga_family = "kintex-ultrascale"
+            self.fpga_freq = 333
+            self.fpga_per = 2
+            self.fpga_log_axi_bus_width = 7
+            self.axi_prot_bits = '010'
+            # IP register address map
+            self.ip_reg_map_range = "0x1000"
+            self.fetch_base_addr = "0xA0000000"
+            self.load_base_addr = "0xA0001000"
+            self.compute_base_addr = "0xA0002000"
+            self.store_base_addr = "0xA0003000"
+        elif self.TARGET == "zc702":
+            self.fpga_device = "xc7z020clg484-1"
+            self.fpga_family = "zynq-7000"
+            self.fpga_freq = 100
+            self.fpga_per = 7
+            self.fpga_log_axi_bus_width = 6
+            self.axi_prot_bits = '000'
+            # IP register address map
+            self.ip_reg_map_range = "0x1000"
+            self.fetch_base_addr = "0x43C00000"
+            self.load_base_addr = "0x43C01000"
+            self.compute_base_addr = "0x43C02000"
+            self.store_base_addr = "0x43C03000"
         else:
             # By default, we use the pynq parameters
             self.fpga_device = "xc7z020clg484-1"
